@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:music_recomendations/core/theme.dart';
 import 'package:music_recomendations/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:music_recomendations/features/auth/presentation/bloc/auth_event.dart';
 import 'package:music_recomendations/features/auth/presentation/bloc/auth_state.dart';
@@ -36,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.darkTheme.scaffoldBackgroundColor,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -74,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 listener: (context, state) {
                   if (state is AuthSuccess) {
-                    Navigator.pushNamedAndRemoveUntil(context, '/chooseMoodPage', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
                   } else if (state is AuthFailure) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

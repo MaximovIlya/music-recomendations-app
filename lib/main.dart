@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:music_recomendations/core/theme.dart';
 import 'package:music_recomendations/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:music_recomendations/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:music_recomendations/features/auth/domain/usecases/login_use_case.dart';
@@ -13,6 +14,8 @@ import 'package:music_recomendations/features/choose_mood/data/repositoies/choos
 import 'package:music_recomendations/features/choose_mood/domain/usecases/choose_mood_use_case.dart';
 import 'package:music_recomendations/features/choose_mood/presentation/bloc/choose_mood_bloc.dart';
 import 'package:music_recomendations/features/choose_mood/presentation/pages/choose_mood_page.dart';
+import 'package:music_recomendations/features/recomendations/presentation/pages/recomendations_page.dart';
+import 'package:music_recomendations/home_page.dart';
 
 void main() async {
 
@@ -63,11 +66,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
         home: LoginPage(),
         routes: {
+          '/home': (_) => HomePage(),
           '/login': (_) => LoginPage(),
           '/register': (_) => RegisterPage(),
-          '/chooseMoodPage': (_) => ChooseMoodPage()
+          '/chooseMoodPage': (_) => ChooseMoodPage(),
+          '/recomendationsPage': (_) => RecomendationsPage(),
         },
       ),
     );

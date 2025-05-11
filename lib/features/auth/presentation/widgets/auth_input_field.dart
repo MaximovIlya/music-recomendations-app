@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_recomendations/core/theme.dart';
 
 class AuthInputField extends StatelessWidget {
   final String hint;
@@ -11,7 +12,7 @@ class AuthInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blueGrey,
+        color: DefaultColors.textInput,
         borderRadius: BorderRadius.circular(25),
       ),
       padding: EdgeInsets.symmetric(horizontal: 20),

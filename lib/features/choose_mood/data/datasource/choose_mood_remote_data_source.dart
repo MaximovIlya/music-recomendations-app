@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:music_recomendations/core/socket_service.dart';
 import 'package:music_recomendations/features/choose_mood/data/models/choose_mood_model.dart';
@@ -14,9 +13,11 @@ class ChooseMoodRemoteDataSource {
     _socketService.socket.emit('generateMusic', message);
 
     _socketService.socket.once('musicListCreated', (data) {
+      print(data);
       try {
-        final List<dynamic> decoded = jsonDecode(data);
-        final models = decoded.map((item) => ChooseMoodModel.fromJson(item)).toList();
+        final List<dynamic> decoded = data; // data уже декодирован
+        final models =
+            decoded.map((item) => ChooseMoodModel.fromJson(item)).toList();
         completer.complete(models);
       } catch (e) {
         print('Ошибка при парсинге JSON: $e');
