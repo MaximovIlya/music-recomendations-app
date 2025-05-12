@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes';
 import { error } from 'console';
 import {Server} from 'socket.io';
 import { generateMoodMusic } from './services/openaiService';
+import favoriteRoutes from './routes/favoriteRoutes';
 
 
 //import './cron/cronJob';
@@ -22,13 +23,14 @@ const io = new Server(server, {
 
 
 app.use('/auth', authRoutes);
+app.use('/favorite', favoriteRoutes);
 
 io.on('connection', (socket)=> {
     console.log('A user connected:', socket.id);
 
-    socket.on('generateMusic', async (message) => {
+    socket.on('generateMusic', async (mood, favorites, nature) => {
         try {
-            const musicList = await generateMoodMusic(message);
+            const musicList = await generateMoodMusic(mood, favorites, nature);
             console.log('musicList: ', musicList);
             socket.emit('musicListCreated', musicList);
         } catch(err) {

@@ -17,23 +17,32 @@ type Song = {
   explanation: string;
 };
 
-export const generateMoodMusic = async (message: string): Promise<Song[]> => {
+export const generateMoodMusic = async (mood: string, favorites: string, nature: string): Promise<Song[]> => {
+
+  var content = '';
+  if (favorites != "") {
+    content = `Suggest 10 random songs that match the mood: "${mood}" and are "${nature}" to "${favorites}".`;
+  } else  {
+    content = `Suggest 10 random songs that match the mood: "${mood}" and are "${nature}".`;
+  }
+
+  console.log('content: ', content);
   try {
     const response = await api.chat.completions.create({
-      model: 'mistralai/Mistral-7B-Instruct-v0.2',
+      model: 'gpt-3.5-turbo',
       messages: [
         {
           role: 'user',
-          content: `Suggest 5 songs that match the mood: "${message}". 
+          content: `"${content}". 
 For each song, return a JSON object with the following fields:
 - title (string)
 - artist (string)
 - explanation (string)
 
-Return an array of 5 such JSON objects. Do not include any extra text.`
+Return an array of 10 such JSON objects. Do not include any extra text.`
         }
       ],
-      max_tokens: 600
+      max_tokens: 1500
     });
 
     const raw = response.choices[0]?.message?.content?.trim() || "[]";
