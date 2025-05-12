@@ -27,7 +27,7 @@ class ByNatureButton extends StatelessWidget {
         height: 100,
         decoration: BoxDecoration(
           border: isSelected ? Border.all(color: Colors.grey, width: 4) : null,
-          color: const Color.fromARGB(255, 18, 18, 18),
+          color: DefaultColors.greyParts,
           borderRadius: BorderRadius.circular(15),
         ),
         child: Column(

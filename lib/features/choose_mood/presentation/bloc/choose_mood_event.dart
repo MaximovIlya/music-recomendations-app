@@ -1,7 +1,9 @@
 abstract class ChooseMoodEvent {}
 
 class LoadChooseMood extends ChooseMoodEvent{
-  final String message;
+  final String mood;
+  final String favorites;
+  final String nature;
 
-  LoadChooseMood(this.message);
+  LoadChooseMood(this.mood, this.favorites, this.nature);
 }

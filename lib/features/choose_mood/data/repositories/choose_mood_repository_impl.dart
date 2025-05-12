@@ -8,7 +8,7 @@ class ChooseMoodRepositoryImpl implements ChooseMoodRepository{
   ChooseMoodRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<ChooseMoodEntity>> generateMoodMusic(String message) async {
-    return await remoteDataSource.generateMoodMusic(message);
+  Future<List<ChooseMoodEntity>> generateMoodMusic(String mood, String favorites, String nature) async {
+    return await remoteDataSource.generateMoodMusic(mood, favorites, nature);
   }
 }

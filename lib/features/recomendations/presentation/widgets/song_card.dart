@@ -1,90 +1,83 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:music_recomendations/core/theme.dart';
+import 'package:music_recomendations/features/favorite/presentation/bloc/favorite_bloc.dart';
+import 'package:music_recomendations/features/favorite/presentation/bloc/favorite_event.dart';
 
-class SongCard extends StatelessWidget {
+class SongCard extends StatefulWidget {
   final String title;
   final String artist;
-  final String explanation;
+  final bool isInitiallyFavorite;
+  final String? songId;
 
-  const SongCard({
-    super.key,
-    required this.title,
-    required this.artist,
-    required this.explanation
-  });
+  const SongCard(
+      {super.key,
+      this.songId,
+      required this.title,
+      required this.artist,
+      required this.isInitiallyFavorite});
+
+  @override
+  State<SongCard> createState() => _SongCardState();
+}
+
+class _SongCardState extends State<SongCard> {
+  bool isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavorite = widget.isInitiallyFavorite;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final favoriteBloc = context.read<FavoriteBloc>();
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.lightBlue[100], 
-        border: Border.all(color: Colors.lightBlueAccent, width: 3),
-        borderRadius: BorderRadius.circular(60),
+        color: DefaultColors.greyParts,
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
+        child: Row(
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              artist,
-              style: const TextStyle(
-                fontSize: 22,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              explanation,
-              style: const TextStyle(
-                fontSize: 22,
-              ),
-            ),
-            const SizedBox(height: 40),
-            const Text(
-              "Do you like this song?",
-              style: TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 16),
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.thumb_up),
-                  label: const Text("Like"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                Text(
+                  widget.title,
+                  style: GoogleFonts.alegreyaSans(
+                    fontSize: FontSizes.medium,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(width: 16),
-                ElevatedButton.icon(
-                  onPressed: () {
-                  },
-                  icon: const Icon(Icons.thumb_down),
-                  label: const Text("Dislike"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
+                const SizedBox(height: 5),
+                Text(
+                  widget.artist,
+                  style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],
+            ),
+            const Spacer(),
+            IconButton(
+              icon: isFavorite
+                  ? Icon(Icons.favorite)
+                  : Icon(Icons.favorite_border_outlined),
+              onPressed: () {
+              if (isFavorite && widget.songId != null) {
+                favoriteBloc.add(DeleteFavorite(id: widget.songId!)); 
+              } else {
+                favoriteBloc.add(AddFavorite(title: widget.title, artist: widget.artist)); 
+              }
+              setState(() => isFavorite = !isFavorite);
+            },
             ),
           ],
         ),

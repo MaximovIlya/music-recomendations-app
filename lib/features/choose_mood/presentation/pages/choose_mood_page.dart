@@ -6,6 +6,8 @@ import 'package:music_recomendations/features/choose_mood/presentation/bloc/choo
 import 'package:music_recomendations/features/choose_mood/presentation/bloc/choose_mood_event.dart';
 import 'package:music_recomendations/features/choose_mood/presentation/widgets/by_nature_button.dart';
 import 'package:music_recomendations/features/choose_mood/presentation/widgets/mood_button.dart';
+import 'package:music_recomendations/features/favorite/presentation/bloc/favorite_bloc.dart';
+import 'package:music_recomendations/features/favorite/presentation/bloc/favorite_state.dart';
 import 'package:music_recomendations/home_page.dart';
 
 class ChooseMoodPage extends StatefulWidget {
@@ -16,23 +18,25 @@ class ChooseMoodPage extends StatefulWidget {
 }
 
 class _ChooseMoodPageState extends State<ChooseMoodPage> {
-  String? message;
+  String? mood;
   String? nature;
+  String? favorites;
 
   @override
   void initState() {
     super.initState();
   }
 
-  void _chooseNature() {
-    if (nature != null && nature!.isNotEmpty) {
-
-    }
-  }
   void _chooseMood() {
-    print('test');
-    if (message != null && message!.isNotEmpty) {
-      BlocProvider.of<ChooseMoodBloc>(context).add(LoadChooseMood(message!));
+    if (mood != null && mood!.isNotEmpty && nature != null && nature!.isNotEmpty) {
+      if (nature != "Popular") {
+        BlocProvider.of<ChooseMoodBloc>(context)
+          .add(LoadChooseMood(mood!, favorites!, nature!));
+      } else {
+        BlocProvider.of<ChooseMoodBloc>(context)
+          .add(LoadChooseMood(mood!, "", nature!));
+      }
+      
     }
     Navigator.pushReplacement(
       context,
@@ -44,7 +48,21 @@ class _ChooseMoodPageState extends State<ChooseMoodPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final favoriteState = BlocProvider.of<FavoriteBloc>(context).state;
+    List<String> favoritesList = [];
+    if (favoriteState is FavoriteLoaded) {
+      
+      favoritesList = favoriteState.songs.map((song) => song.title).toList();
+    }
+
+    
+    favorites = favoritesList.join(', ');
+
+    
+
     return Scaffold(
+      
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -69,39 +87,39 @@ class _ChooseMoodPageState extends State<ChooseMoodPage> {
                 children: [
                   MoodButton(
                     text: 'Funny',
-                    onPressed: () => setState(() => message = 'Funny'),
+                    onPressed: () => setState(() => mood = 'Funny'),
                     gradientColors: [
                       Colors.yellow,
                       Color.fromARGB(255, 44, 120, 47)
                     ],
-                    isSelected: message == 'Funny',
+                    isSelected: mood == 'Funny',
                   ),
                   SizedBox(width: 20),
                   MoodButton(
                     text: 'Sad',
-                    onPressed: () => setState(() => message = 'Sad'),
+                    onPressed: () => setState(() => mood = 'Sad'),
                     gradientColors: [
                       Color.fromARGB(255, 2, 61, 110),
                       Colors.deepPurple
                     ],
-                    isSelected: message == 'Sad',
+                    isSelected: mood == 'Sad',
                   ),
                   SizedBox(width: 20),
                   MoodButton(
-                    text: 'Fatigue',
-                    onPressed: () => setState(() => message = 'Fatigue'),
+                    text: 'Calm',
+                    onPressed: () => setState(() => mood = 'Calm'),
                     gradientColors: [
                       Colors.blue,
                       Color.fromARGB(255, 87, 237, 234)
                     ],
-                    isSelected: message == 'Fatigue',
+                    isSelected: mood == 'Calm',
                   ),
                   SizedBox(width: 20),
                   MoodButton(
                     text: 'In love',
-                    onPressed: () => setState(() => message = 'In love'),
+                    onPressed: () => setState(() => mood = 'In love'),
                     gradientColors: [Colors.pinkAccent, Colors.red],
-                    isSelected: message == 'In love',
+                    isSelected: mood == 'In love',
                   ),
                 ],
               ),
@@ -117,17 +135,17 @@ class _ChooseMoodPageState extends State<ChooseMoodPage> {
                   ByNatureButton(
                     text: 'Favorite',
                     icon: Icons.favorite,
-                    onPressed: () => setState(() => nature = 'Favorite'),
+                    onPressed: () => setState(() => nature = 'Similar'),
                     gradientColors: [Colors.pinkAccent, Colors.red],
-                    isSelected: nature == 'Favorite',
+                    isSelected: nature == 'Similar',
                   ),
                   SizedBox(width: 20),
                   ByNatureButton(
                     text: 'Unfamiliar',
                     icon: Icons.star,
-                    onPressed: () => setState(() => nature = 'Unfamiliar'),
+                    onPressed: () => setState(() => nature = 'Not similar'),
                     gradientColors: [Colors.orange, Colors.yellow],
-                    isSelected: nature == 'Unfamiliar',
+                    isSelected: nature == 'Not similar',
                   ),
                   SizedBox(width: 20),
                   ByNatureButton(
@@ -137,7 +155,7 @@ class _ChooseMoodPageState extends State<ChooseMoodPage> {
                     gradientColors: [Colors.grey, Colors.white],
                     isSelected: nature == 'Popular',
                   ),
-                  SizedBox(width: 20),
+                  
                 ],
               ),
               SizedBox(height: 20),
@@ -146,7 +164,7 @@ class _ChooseMoodPageState extends State<ChooseMoodPage> {
                 child: ElevatedButton(
                   onPressed: _chooseMood,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 18, 18, 18),
+                    backgroundColor: DefaultColors.greyParts,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),

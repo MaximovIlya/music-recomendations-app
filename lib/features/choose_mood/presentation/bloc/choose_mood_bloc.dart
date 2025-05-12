@@ -14,7 +14,7 @@ class ChooseMoodBloc extends Bloc<ChooseMoodEvent, ChooseMoodState> {
   Future<void> _onLoadChooseMood(LoadChooseMood event, Emitter<ChooseMoodState> emit) async {
     emit(ChooseMoodLoadingState());
     try {
-      final List<ChooseMoodEntity> songs = await chooseMoodUseCase(event.message);
+      final List<ChooseMoodEntity> songs = await chooseMoodUseCase(event.mood, event.favorites, event.nature);
       emit(ChooseMoodLoadedState(songs));
     } catch (e) {
       emit(ChooseMoodErrorState(e.toString()));

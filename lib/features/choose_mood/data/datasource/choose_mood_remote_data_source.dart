@@ -7,15 +7,15 @@ class ChooseMoodRemoteDataSource {
   final String baseUrl = 'http://localhost:6000';
   final SocketService _socketService = SocketService();
 
-  Future<List<ChooseMoodModel>> generateMoodMusic(String message) async {
+  Future<List<ChooseMoodModel>> generateMoodMusic(String mood, String favorites, String nature) async {
     final completer = Completer<List<ChooseMoodModel>>();
 
-    _socketService.socket.emit('generateMusic', message);
+    _socketService.socket.emit('generateMusic', [mood, favorites, nature]);
 
     _socketService.socket.once('musicListCreated', (data) {
       print(data);
       try {
-        final List<dynamic> decoded = data; // data уже декодирован
+        final List<dynamic> decoded = data; 
         final models =
             decoded.map((item) => ChooseMoodModel.fromJson(item)).toList();
         completer.complete(models);

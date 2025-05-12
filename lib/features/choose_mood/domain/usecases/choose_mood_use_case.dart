@@ -7,7 +7,7 @@ class ChooseMoodUseCase {
   ChooseMoodUseCase({required this.chooseMoodRepository});
 
 
-  Future<List<ChooseMoodEntity>>call(String message) async {
-    return await chooseMoodRepository.generateMoodMusic(message);
+  Future<List<ChooseMoodEntity>>call(String mood, String favorites, String nature) async {
+    return await chooseMoodRepository.generateMoodMusic(mood, favorites, nature);
   }
 }
